@@ -58,10 +58,28 @@ ggarrange(A, B, C, D,
           labels = c("1", "2", "3", "4"),
           ncol = 2, nrow = 2)
 
-####Scatterplot of film adaptations of Dracula and The Beetle####
+####Scatterplot of film adaptations of Dracula and The Beetle with ggplot####
 library(tidyverse)
 ggplot(Dracula_adaptations, aes(x=Dracula_adaptations$Year, y=Dracula_adaptations$ImdB)) +
     geom_point(alpha = 0.5, size = 3, color = 'dimgray') +
+    geom_rug(alpha = 1/2, position = "jitter") +
     labs(title = "Film adaptations of Dracula", 
          x = "Year", 
          y ="Number of IMDB Ratings")
+####Scatterplot of film adaptations of Dracula and The Beetle with ggstatsplot####
+library(ggstatsplot)
+
+ggstatsplot::ggscatterstats(
+    data = Dracula_adaptations,
+    x = Year,
+    y = ImdB,
+    xlab = "Year", # label for x axis
+    ylab = "Number of IMDB Ratings", # label for y axis
+    label.var = Title, # variable for labeling data points
+    label.expression = "ImdB > 20000 | Year < 1923", # expression that decides which points to label
+    title = "Film adaptations of Dracula and the Beetle", # title text for the plot
+    ggstatsplot.layer = FALSE, # turn off `ggstatsplot` theme layer
+    marginal.type = "density", # type of marginal distribution to be displayed
+    xfill = "dimgray", # color fill for x-axis marginal distribution
+    yfill = "dimgray" # color fill for y-axis marginal distribution
+)
