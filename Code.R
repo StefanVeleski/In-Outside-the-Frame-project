@@ -136,14 +136,22 @@ F
 composite_plot2 <- ggarrange(E,F, ncol = 2, nrow = 1)
 
 composite_plot2
+
+
+ggsave("plot1.emf",
+       plot = composite_plot2, 
+       device = emf, 
+       dpi = "print",
+       width = 8, height = 8)
+
 ####Scatterplot of film adaptations of Dracula and The Beetle with ggplot####
-gg
 ggplot(Dracula_adaptations, aes(x=Dracula_adaptations$Year, y=Dracula_adaptations$ImdB)) +
     geom_point(alpha = 0.5, size = 3, color = 'dimgray') +
     geom_rug(alpha = 1/2, position = "jitter") +
     labs(title = "Film adaptations of Dracula", 
          x = "Year", 
          y ="Number of IMDB Ratings")
+
 ####Scatterplot of film adaptations of Dracula and The Beetle with ggstatsplot####
 library(ggstatsplot)
 
@@ -162,19 +170,12 @@ ggscatterstats(
     xfill = "dimgray", # color fill for x-axis marginal distribution
     yfill = "dimgray" # color fill for y-axis marginal distribution
 )
+ggstatsplot
 
-#### Creating EMF file for seamless insertion in Word file####
+#### Another implementation, with ggplot not ggstatsplot####
 library(ggExtra)
-library(devEMF)
 library(ggrepel)
-tmp_file <- "EMF_plot.emf"
-# ?emf # if needed
-emf(file= tmp_file, pointsize= 10, width= 5, height= 3) # Opens a device
-temp_margins <- c(1.5, 2.3, 0.5, 0.2) # Adjust margins
-par(mfrow = c(1,1), mar = temp_margins,
-    mgp=c(0.6, 0.3, 0),  tcl = -0.15, las = 1)
 
-# Insert the plot which needs to be exported here!
 plot_dracula <- ggplot(Dracula_adaptations, aes(x=Year, y=ImdB, shape = `Book?`)) +
     geom_point(alpha = 0.5, size = 3, color = 'dimgray') +
     labs(title = "Film adaptations of Dracula and the Beetle", 
@@ -191,6 +192,32 @@ plot_dracula <- ggplot(Dracula_adaptations, aes(x=Year, y=ImdB, shape = `Book?`)
 plot_dracula <- ggMarginal(plot_dracula, type="histogram")
 
 plot_dracula
-dev.off()  # Close the device
 
-?theme
+
+# Let's just label these items.
+ix_label <- c(66,2,3,68,60,69)
+Dracula_adaptations$Title[-ix_label] <- ""
+Dracula_adaptations$Title[ix_label] <- rownames(Dracula_adaptation)[ix_label]
+
+options(ggrepel.max.overlaps = Inf) 
+
+plot2 <- ggplot(Dracula_adaptations, aes(Year, ImdB, shape = `Book?`, label = Title)) +
+    geom_point(alpha = 0.5, size = 3, color = ifelse(Dracula_adaptations$Title == "", "gray48", "gray20"))+
+    geom_label_repel(aes(label = Dracula_adaptations$Title),
+    box.padding = 0.35, 
+    point.padding = 0.5,
+    segment.color = 'grey50') +
+    theme(legend.title = element_blank(), 
+          legend.position="bottom", 
+          legend.direction = "horizontal")
+plot2
+
+plot2 <- ggMarginal(plot2, type="histogram")
+
+plot2
+
+ggsave("plot2.emf",
+       plot = plot2, 
+       device = emf, 
+       dpi = "print",
+       width = 9, height = 6)
