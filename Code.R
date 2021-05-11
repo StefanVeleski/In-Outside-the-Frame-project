@@ -21,7 +21,7 @@ A <- ggplot(Main_dataset, aes(x=Rank1, y=Ratings)) +
                size = 4) +
     labs(title = "Distribution of present day popularity", 
          x = "Rank", 
-         y ="Number of Ratings")
+         y ="Number of Goodreads Ratings")
 
 A <- A +  geom_label_repel(data = highlight_df,(aes(label = highlight_df$Title)),
                       box.padding   = 0.35, 
@@ -43,7 +43,7 @@ B <- ggplot(Main_dataset, aes(x=Rank1, y=Ratings)) +
                size = 4) +
     labs(title = "Distribution of present day popularity (log)", 
          x = "Rank (log)", 
-         y ="Number of Ratings")
+         y ="Number of Goodreads Ratings")
 B <- B +  geom_label_repel(data = highlight_df,(aes(label = highlight_df$Title)),
                            box.padding   = 0.35, 
                            point.padding = 0.5,
@@ -105,7 +105,7 @@ E <- ggplot(Main_dataset, aes(x=Rank1, y=Ratings)) +
                size = 4) +
     labs(title = "Distribution of present day popularity", 
          x = "Rank", 
-         y ="Number of Ratings")+
+         y ="Number of Goodreads Ratings")+
     facet_zoom(xlim = c(1, 35))
 
 E <- E +  geom_label_repel(data = highlight_df,(aes(label = highlight_df$Title)),
